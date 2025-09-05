@@ -30,16 +30,6 @@ const Navbar = () => {
     alert('Logged out successfully!')
   }
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode)
-    // Update the dark mode class on the root element
-    if (!isDarkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }
-
   return (
     <nav className={`shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -109,7 +99,7 @@ const Navbar = () => {
             )}
             
             <button
-              onClick={toggleDarkMode}
+              onClick={() => setIsDarkMode(!isDarkMode)}
               className={`p-2 rounded-full ${isDarkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
             >
               {isDarkMode ? (
@@ -197,7 +187,7 @@ const Navbar = () => {
               </a>
             ))}
             <button
-              onClick={toggleDarkMode}
+              onClick={() => setIsDarkMode(!isDarkMode)}
               className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
             >
               {isDarkMode ? 'Light Mode' : 'Dark Mode'}
