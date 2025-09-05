@@ -42,7 +42,7 @@ export default function Home() {
   }
 
   return (
-    <Layout isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}>
+    <Layout>
       <div id="dashboard-content" className={`p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Financial Dashboard</h1>
