@@ -1,0 +1,68 @@
+{
+  "mainCards": {
+    "aum": {
+      "value": 2500000000,
+      "momChange": 12.5,
+      "trend": "up"
+    },
+    "sip": {
+      "value": 450000000,
+      "momChange": -2.3,
+      "trend": "down"
+    }
+  },
+  "statCards": {
+    "purchases": {
+      "value": 1250,
+      "change": 8.2
+    },
+    "redemptions": {
+      "value": 890,
+      "change": -5.1
+    },
+    "rejectedTransactions": {
+      "value": 45,
+      "change": -12.3
+    },
+    "sipRejections": {
+      "value": 23,
+      "change": -8.7
+    },
+    "newSip": {
+      "value": 156,
+      "change": 15.4
+    }
+  },
+  "clientsData": [
+    { "x": 50, "y": 120000, "z": 250, "name": "High Net Worth" },
+    { "x": 120, "y": 80000, "z": 180, "name": "Premium" },
+    { "x": 200, "y": 45000, "z": 320, "name": "Standard" },
+    { "x": 180, "y": 65000, "z": 280, "name": "Growth" },
+    { "x": 90, "y": 95000, "z": 150, "name": "Elite" },
+    { "x": 160, "y": 55000, "z": 220, "name": "Regular" },
+    { "x": 75, "y": 105000, "z": 190, "name": "VIP" },
+    { "x": 140, "y": 72000, "z": 260, "name": "Corporate" }
+  ],
+  "sipBusinessData": [
+    { "month": "Jan", "sip": 2400000, "business": 4000000 },
+    { "month": "Feb", "sip": 1398000, "business": 3000000 },
+    { "month": "Mar", "sip": 9800000, "business": 2000000 },
+    { "month": "Apr", "sip": 3908000, "business": 2780000 },
+    { "month": "May", "sip": 4800000, "business": 1890000 },
+    { "month": "Jun", "sip": 3800000, "business": 2390000 }
+  ],
+  "monthlyMisData": [
+    { "month": "Jan", "purchases": 4000, "redemptions": 2400, "netFlow": 1600 },
+    { "month": "Feb", "purchases": 3000, "redemptions": 1398, "netFlow": 1602 },
+    { "month": "Mar", "purchases": 2000, "redemptions": 9800, "netFlow": -7800 },
+    { "month": "Apr", "purchases": 2780, "redemptions": 3908, "netFlow": -1128 },
+    { "month": "May", "purchases": 1890, "redemptions": 4800, "netFlow": -2910 },
+    { "month": "Jun", "purchases": 2390, "redemptions": 3800, "netFlow": -1410 }
+  ],
+  "timeFilters": [
+    { "label": "3 Days", "days": 3, "active": false },
+    { "label": "7 Days", "days": 7, "active": true },
+    { "label": "10 Days", "days": 10, "active": false },
+    { "label": "30 Days", "days": 30, "active": false }
+  ]
+}
