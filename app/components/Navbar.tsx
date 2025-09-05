@@ -2,15 +2,11 @@
 
 import { useState } from 'react'
 
-interface NavbarProps {
-  isDarkMode: boolean
-  setIsDarkMode: (value: boolean) => void
-}
-
-const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
+const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [isDarkMode, setIsDarkMode] = useState(false)
   
   const menuItems = [
     'CRM', 'Utilities', 'Insurance', 'Assets', 'Mutual', 
@@ -32,6 +28,16 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
   const handleLogout = () => {
     setIsLoggedIn(false)
     alert('Logged out successfully!')
+  }
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode)
+    // Update the dark mode class on the root element
+    if (!isDarkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
   }
 
   return (
@@ -103,7 +109,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
             )}
             
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              onClick={toggleDarkMode}
               className={`p-2 rounded-full ${isDarkMode ? 'bg-gray-700 text-yellow-300' : 'bg-gray-200 text-gray-700'}`}
             >
               {isDarkMode ? (
@@ -191,7 +197,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
               </a>
             ))}
             <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
+              onClick={toggleDarkMode}
               className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
             >
               {isDarkMode ? 'Light Mode' : 'Dark Mode'}
