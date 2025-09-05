@@ -5,10 +5,10 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 interface MonthlyMISChartProps {
   data: any[]
   isLoading: boolean
-  isDarkMode: boolean
+  isDarkMode?: boolean
 }
 
-const MonthlyMISChart = ({ data, isLoading, isDarkMode }: MonthlyMISChartProps) => {
+const MonthlyMISChart = ({ data, isLoading, isDarkMode = false }: MonthlyMISChartProps) => {
   if (isLoading) {
     return (
       <div className="h-80 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>

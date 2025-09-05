@@ -5,10 +5,10 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 interface SIPChartProps {
   data: any[]
   isLoading: boolean
-  isDarkMode: boolean
+  isDarkMode?: boolean
 }
 
-const SIPChart = ({ data, isLoading, isDarkMode }: SIPChartProps) => {
+const SIPChart = ({ data, isLoading, isDarkMode = false }: SIPChartProps) => {
   if (isLoading) {
     return (
       <div className="h-80 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>

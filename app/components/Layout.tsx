@@ -1,14 +1,15 @@
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import Navbar from './Navbar'
 import MobileRouter from './MobileRouter'
 import { Capacitor } from '@capacitor/core'
 
 interface LayoutProps {
   children: ReactNode
+  isDarkMode?: boolean
+  setIsDarkMode?: (value: boolean) => void
 }
 
-const Layout = ({ children }: LayoutProps) => {
-  const [isDarkMode, setIsDarkMode] = useState(false)
+const Layout = ({ children, isDarkMode = false, setIsDarkMode = () => {} }: LayoutProps) => {
   const isNative = Capacitor.isNativePlatform()
   
   return (

@@ -15,6 +15,7 @@ export default function Home() {
   const [data, setData] = useState<any>(null)
   const [timeRange, setTimeRange] = useState('7D')
   const [isLoading, setIsLoading] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
     const loadData = async () => {
@@ -41,10 +42,10 @@ export default function Home() {
   }
 
   return (
-    <Layout>
-      <div id="dashboard-content" className="p-4">
+    <Layout isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}>
+      <div id="dashboard-content" className={`p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-blue-600">Financial Dashboard</h1>
+          <h1 className="text-2xl font-bold">Financial Dashboard</h1>
           <button 
             onClick={handleExportPDF}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center"
@@ -61,20 +62,20 @@ export default function Home() {
         <StatCards data={data} isLoading={isLoading} />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <div className={`p-4 rounded-lg shadow ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <h2 className="text-lg font-semibold mb-4">Clients</h2>
-            <ClientsChart data={data?.clientsData} isLoading={isLoading} />
+            <ClientsChart data={data?.clientsData} isLoading={isLoading} isDarkMode={isDarkMode} />
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <div className={`p-4 rounded-lg shadow ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <h2 className="text-lg font-semibold mb-4">SIP Business</h2>
-            <SIPChart data={data?.sipData} isLoading={isLoading} />
+            <SIPChart data={data?.sipData} isLoading={isLoading} isDarkMode={isDarkMode} />
           </div>
         </div>
         
-        <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <div className={`mt-6 p-4 rounded-lg shadow ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
           <h2 className="text-lg font-semibold mb-4">Monthly MIS</h2>
-          <MonthlyMISChart data={data?.misData} isLoading={isLoading} />
+          <MonthlyMISChart data={data?.misData} isLoading={isLoading} isDarkMode={isDarkMode} />
         </div>
       </div>
     </Layout>

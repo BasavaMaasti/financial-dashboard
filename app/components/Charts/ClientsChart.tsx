@@ -5,10 +5,10 @@ import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Responsive
 interface ClientsChartProps {
   data: any[]
   isLoading: boolean
-  isDarkMode: boolean
+  isDarkMode?: boolean
 }
 
-const ClientsChart = ({ data, isLoading, isDarkMode }: ClientsChartProps) => {
+const ClientsChart = ({ data, isLoading, isDarkMode = false }: ClientsChartProps) => {
   if (isLoading) {
     return (
       <div className="h-80 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
