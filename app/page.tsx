@@ -64,7 +64,7 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
           <div className={`p-4 rounded-lg shadow ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
             <h2 className="text-lg font-semibold mb-4">Clients</h2>
-            <ClientsChart data={data?.clientsData} isLoading={isLoading} isDarkMode={isDarkMode} />
+            <ClientsChart data={data?.clientsData} isLoading={isLoading} isDarkMode={false} />
           </div>
           
           <div className={`p-4 rounded-lg shadow ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
