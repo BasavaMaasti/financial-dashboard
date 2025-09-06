@@ -9,7 +9,7 @@ interface LayoutProps {
   setIsDarkMode?: (value: boolean) => void
 }
 
-const Layout = ({ children, isDarkMode = false, setIsDarkMode = () => {} }: LayoutProps) => {
+const Layout = ({ children, isDarkMode = false, setIsDarkMode }: LayoutProps) => {
   const isNative = Capacitor.isNativePlatform()
   
   return (
