@@ -1,24 +1,19 @@
-import { ReactNode } from 'react'
-import Navbar from './Navbar'
-import MobileRouter from './MobileRouter'
-import { Capacitor } from '@capacitor/core'
+import type { Metadata } from 'next'
+import './globals.css'
 
-interface LayoutProps {
-  children: ReactNode
+export const metadata: Metadata = {
+  title: 'Financial Dashboard',
+  description: 'A comprehensive financial dashboard built with Next.js',
 }
 
-const Layout = ({ children }: LayoutProps) => {
-  const isNative = Capacitor.isNativePlatform()
-  
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
-    <div className={`min-h-screen flex flex-col ${isNative ? 'safe-area' : ''}`}>
-      <MobileRouter />
-      <Navbar />
-      <div className="flex-1">
-        {children}
-      </div>
-    </div>
+    <html lang="en">
+      <body>{children}</body>
+    </html>
   )
 }
-
-export default Layout
