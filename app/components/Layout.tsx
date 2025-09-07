@@ -15,7 +15,7 @@ const Layout = ({ children, isDarkMode = false, setIsDarkMode }: LayoutProps) =>
   return (
     <div className={`min-h-screen flex flex-col ${isNative ? 'safe-area' : ''} ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
       <MobileRouter />
-      <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+      {/* <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} /> */}
       <div className="flex-1">
         {children}
       </div>
