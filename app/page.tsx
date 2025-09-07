@@ -15,18 +15,8 @@ export default function Home() {
   const [data, setData] = useState<any>(null)
   const [timeRange, setTimeRange] = useState('7D')
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [isDarkMode, setIsDarkMode] = useState(false)
-
-  // Load data based on time range
-  useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true)
-      const result = await fetchDashboardData(timeRange)
-      setData(result)
-      setIsLoading(false)
-    }
-    loadData()
-  }, [timeRange])
 
   // Initialize dark mode from localStorage or system preference
   useEffect(() => {
@@ -42,7 +32,7 @@ export default function Home() {
     }
   }, [])
 
-  // Persist dark mode choice
+  // Apply dark mode to document
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark')
@@ -53,107 +43,139 @@ export default function Home() {
     }
   }, [isDarkMode])
 
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true)
+      setError(null)
+      
+      try {
+        const timeFilter = timeRange.replace('D', '')
+        const result = await fetchDashboardData(timeFilter)
+        
+        if (result.success && result.data) {
+          setData(result.data)
+        } else {
+          setError(result.error || 'Failed to load data')
+        }
+      } catch (err) {
+        setError('Network error occurred')
+      }
+      
+      setIsLoading(false)
+    }
+    
+    loadData()
+  }, [timeRange])
+
   const handleExportPDF = () => {
-    exportToPDF('dashboard-content', 'financial-dashboard-report')
+    if (data) {
+      exportToPDF('dashboard-content', 'financial-dashboard-report')
+    } else {
+      alert('Please wait for data to load before exporting')
+    }
   }
 
   if (isLoading) {
     return (
-      <Layout>
-        <div className="flex justify-center items-center h-64">
+      <Layout isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}>
+        <div className="flex flex-col justify-center items-center h-64 space-y-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading dashboard data...</p>
+        </div>
+      </Layout>
+    )
+  }
+
+  if (error) {
+    return (
+      <Layout isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}>
+        <div className="flex flex-col justify-center items-center h-64 space-y-4">
+          <div className="text-red-500 text-center">
+            <p className="text-lg font-semibold">Error Loading Dashboard</p>
+            <p className="text-sm text-gray-500 mt-2">{error}</p>
+          </div>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+          >
+            Retry
+          </button>
+        </div>
+      </Layout>
+    )
+  }
+
+  if (!data) {
+    return (
+      <Layout isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}>
+        <div className="flex flex-col justify-center items-center h-64 space-y-4">
+          <p className="text-gray-600 dark:text-gray-400">No data available</p>
+          <button 
+            onClick={() => window.location.reload()}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+          >
+            Refresh
+          </button>
         </div>
       </Layout>
     )
   }
 
   return (
-    <Layout>
-      <div
-        id="dashboard-content"
-        className={`p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}
-      >
+    <Layout isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}>
+      <div id="dashboard-content" className="p-4">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Financial Dashboard</h1>
-
-          <div className="flex gap-3">
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-2 rounded-lg"
-            >
-              {isDarkMode ? '☀️ Light' : '🌙 Dark'}
-            </button>
-
-            {/* Export PDF Button */}
-            <button
-              onClick={handleExportPDF}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center"
-            >
-              <svg
-                className="w-5 h-5 mr-2"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 
-                     2 0 012-2h5.586a1 1 0 01.707.293l5.414 
-                     5.414a1 1 0 01.293.707V19a2 2 
-                     0 01-2 2z"
-                />
-              </svg>
-              Export PDF
-            </button>
-          </div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Financial Dashboard
+          </h1>
+          {/* Only PDF Export button - Dark mode toggle is in Navbar */}
+          <button 
+            onClick={handleExportPDF}
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center shadow-md transition-colors duration-200"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            Export PDF
+          </button>
         </div>
 
-        <MainCards data={data} isLoading={isLoading} />
+        <MainCards data={data.mainCards} isLoading={isLoading} />
         <FilterBar timeRange={timeRange} setTimeRange={setTimeRange} />
-        <StatCards data={data} isLoading={isLoading} />
-
+        <StatCards data={data.statCards} isLoading={isLoading} />
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <div
-            className={`p-4 rounded-lg shadow ${
-              isDarkMode ? 'bg-gray-800' : 'bg-white'
-            }`}
-          >
-            <h2 className="text-lg font-semibold mb-4">Clients</h2>
-            <ClientsChart
-              data={data?.clientsData}
-              isLoading={isLoading}
-              isDarkMode={isDarkMode}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+              Clients Distribution
+            </h2>
+            <ClientsChart 
+              data={data.clientsData} 
+              isLoading={isLoading} 
+              isDarkMode={isDarkMode} 
             />
           </div>
-
-          <div
-            className={`p-4 rounded-lg shadow ${
-              isDarkMode ? 'bg-gray-800' : 'bg-white'
-            }`}
-          >
-            <h2 className="text-lg font-semibold mb-4">SIP Business</h2>
-            <SIPChart
-              data={data?.sipData}
-              isLoading={isLoading}
-              isDarkMode={isDarkMode}
+          
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+            <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+              SIP Business Trends
+            </h2>
+            <SIPChart 
+              data={data.sipBusinessData} 
+              isLoading={isLoading} 
+              isDarkMode={isDarkMode} 
             />
           </div>
         </div>
-
-        <div
-          className={`mt-6 p-4 rounded-lg shadow ${
-            isDarkMode ? 'bg-gray-800' : 'bg-white'
-          }`}
-        >
-          <h2 className="text-lg font-semibold mb-4">Monthly MIS</h2>
-          <MonthlyMISChart
-            data={data?.misData}
-            isLoading={isLoading}
-            isDarkMode={isDarkMode}
+        
+        <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+            Monthly MIS Report
+          </h2>
+          <MonthlyMISChart 
+            data={data.monthlyMisData} 
+            isLoading={isLoading} 
+            isDarkMode={isDarkMode} 
           />
         </div>
       </div>
