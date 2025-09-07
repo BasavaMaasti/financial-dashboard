@@ -17,6 +17,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [isDarkMode, setIsDarkMode] = useState(false)
 
+  // Load data based on time range
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true)
@@ -26,6 +27,31 @@ export default function Home() {
     }
     loadData()
   }, [timeRange])
+
+  // Initialize dark mode from localStorage or system preference
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme')
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      setIsDarkMode(true)
+      document.documentElement.classList.add('dark')
+    } else {
+      setIsDarkMode(false)
+      document.documentElement.classList.remove('dark')
+    }
+  }, [])
+
+  // Persist dark mode choice
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
+  }, [isDarkMode])
 
   const handleExportPDF = () => {
     exportToPDF('dashboard-content', 'financial-dashboard-report')
@@ -43,39 +69,92 @@ export default function Home() {
 
   return (
     <Layout>
-      <div id="dashboard-content" className={`p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+      <div
+        id="dashboard-content"
+        className={`p-4 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}
+      >
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Financial Dashboard</h1>
-          <button 
-            onClick={handleExportPDF}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center"
-          >
-            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            Export PDF
-          </button>
+
+          <div className="flex gap-3">
+            {/* Dark Mode Toggle */}
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="bg-gray-700 hover:bg-gray-800 text-white px-3 py-2 rounded-lg"
+            >
+              {isDarkMode ? '☀️ Light' : '🌙 Dark'}
+            </button>
+
+            {/* Export PDF Button */}
+            <button
+              onClick={handleExportPDF}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center"
+            >
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 
+                     2 0 012-2h5.586a1 1 0 01.707.293l5.414 
+                     5.414a1 1 0 01.293.707V19a2 2 
+                     0 01-2 2z"
+                />
+              </svg>
+              Export PDF
+            </button>
+          </div>
         </div>
 
         <MainCards data={data} isLoading={isLoading} />
         <FilterBar timeRange={timeRange} setTimeRange={setTimeRange} />
         <StatCards data={data} isLoading={isLoading} />
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <div className={`p-4 rounded-lg shadow ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+          <div
+            className={`p-4 rounded-lg shadow ${
+              isDarkMode ? 'bg-gray-800' : 'bg-white'
+            }`}
+          >
             <h2 className="text-lg font-semibold mb-4">Clients</h2>
-            <ClientsChart data={data?.clientsData} isLoading={isLoading} isDarkMode={false} />
+            <ClientsChart
+              data={data?.clientsData}
+              isLoading={isLoading}
+              isDarkMode={isDarkMode}
+            />
           </div>
-          
-          <div className={`p-4 rounded-lg shadow ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+
+          <div
+            className={`p-4 rounded-lg shadow ${
+              isDarkMode ? 'bg-gray-800' : 'bg-white'
+            }`}
+          >
             <h2 className="text-lg font-semibold mb-4">SIP Business</h2>
-            <SIPChart data={data?.sipData} isLoading={isLoading} isDarkMode={isDarkMode} />
+            <SIPChart
+              data={data?.sipData}
+              isLoading={isLoading}
+              isDarkMode={isDarkMode}
+            />
           </div>
         </div>
-        
-        <div className={`mt-6 p-4 rounded-lg shadow ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+
+        <div
+          className={`mt-6 p-4 rounded-lg shadow ${
+            isDarkMode ? 'bg-gray-800' : 'bg-white'
+          }`}
+        >
           <h2 className="text-lg font-semibold mb-4">Monthly MIS</h2>
-          <MonthlyMISChart data={data?.misData} isLoading={isLoading} isDarkMode={isDarkMode} />
+          <MonthlyMISChart
+            data={data?.misData}
+            isLoading={isLoading}
+            isDarkMode={isDarkMode}
+          />
         </div>
       </div>
     </Layout>
