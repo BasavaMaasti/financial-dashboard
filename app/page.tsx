@@ -17,9 +17,11 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isDarkMode, setIsDarkMode] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   // Initialize dark mode from localStorage or system preference
   useEffect(() => {
+    setMounted(true)
     const savedTheme = localStorage.getItem('theme')
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
     
@@ -34,14 +36,16 @@ export default function Home() {
 
   // Apply dark mode to document
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
+    if (mounted) {
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark')
+        localStorage.setItem('theme', 'dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+        localStorage.setItem('theme', 'light')
+      }
     }
-  }, [isDarkMode])
+  }, [isDarkMode, mounted])
 
   useEffect(() => {
     const loadData = async () => {
@@ -75,6 +79,17 @@ export default function Home() {
     }
   }
 
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-white">
+        <div className="flex items-center justify-center h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </div>
+    )
+  }
+
   if (isLoading) {
     return (
       <Layout isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode}>
@@ -96,7 +111,7 @@ export default function Home() {
           </div>
           <button 
             onClick={() => window.location.reload()}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
           >
             Retry
           </button>
@@ -112,7 +127,7 @@ export default function Home() {
           <p className="text-gray-600 dark:text-gray-400">No data available</p>
           <button 
             onClick={() => window.location.reload()}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors"
           >
             Refresh
           </button>
@@ -128,7 +143,6 @@ export default function Home() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
             Financial Dashboard
           </h1>
-          {/* Only PDF Export button - Dark mode toggle is in Navbar */}
           <button 
             onClick={handleExportPDF}
             className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center shadow-md transition-colors duration-200"
@@ -145,7 +159,7 @@ export default function Home() {
         <StatCards data={data.statCards} isLoading={isLoading} />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 transition-colors">
             <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
               Clients Distribution
             </h2>
@@ -156,7 +170,7 @@ export default function Home() {
             />
           </div>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 transition-colors">
             <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
               SIP Business Trends
             </h2>
@@ -168,7 +182,7 @@ export default function Home() {
           </div>
         </div>
         
-        <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+        <div className="mt-6 bg-white dark:bg-gray-800 rounded-lg shadow p-4 transition-colors">
           <h2 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
             Monthly MIS Report
           </h2>

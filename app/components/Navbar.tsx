@@ -3,11 +3,11 @@
 import { useState } from 'react'
 
 interface NavbarProps {
-  isDarkMode?: boolean
-  setIsDarkMode?: (value: boolean) => void
+  isDarkMode: boolean
+  setIsDarkMode: (value: boolean) => void
 }
 
-const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
+const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
@@ -35,18 +35,16 @@ const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
   }
 
   const handleDarkModeToggle = () => {
-    if (setIsDarkMode) {
-      setIsDarkMode(!isDarkMode)
-    }
+    setIsDarkMode(!isDarkMode)
   }
 
   return (
-    <nav className={`shadow-md ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+    <nav className={`shadow-md transition-colors ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* FinanceApp title */}
           <div className="flex items-center mr-4">
-            <span className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <span className={`text-xl font-bold transition-colors ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               FinanceApp
             </span>
           </div>
@@ -65,7 +63,11 @@ const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`block w-full pl-10 pr-3 py-2 rounded-md ${isDarkMode ? 'bg-gray-700 text-white placeholder-gray-400 border-gray-600' : 'bg-gray-100 text-gray-900 placeholder-gray-500 border-gray-200'} border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+                  className={`block w-full pl-10 pr-3 py-2 rounded-md transition-colors ${
+                    isDarkMode 
+                      ? 'bg-gray-700 text-white placeholder-gray-400 border-gray-600' 
+                      : 'bg-gray-100 text-gray-900 placeholder-gray-500 border-gray-200'
+                  } border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
                 />
               </div>
             </form>
@@ -75,30 +77,57 @@ const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
           <div className="hidden md:flex items-center space-x-2">
             {/* Navigation items - show only first 4 */}
             {menuItems.slice(0, 4).map((item) => (
-              <a key={item} href="#" className={`px-2 py-2 rounded-md text-sm font-medium ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}>
+              <a 
+                key={item} 
+                href="#" 
+                className={`px-2 py-2 rounded-md text-sm font-medium transition-colors ${
+                  isDarkMode 
+                    ? 'text-gray-300 hover:bg-gray-700 hover:text-white' 
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                }`}
+              >
                 {item}
               </a>
             ))}
             
             {/* More dropdown */}
             <div className="relative group">
-              <button className={`px-2 py-2 rounded-md text-sm font-medium ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}>
+              <button className={`px-2 py-2 rounded-md text-sm font-medium transition-colors ${
+                isDarkMode 
+                  ? 'text-gray-300 hover:bg-gray-700 hover:text-white' 
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+              }`}>
                 More
               </button>
-              <div className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 z-10 hidden group-hover:block ${isDarkMode ? 'bg-gray-800' : 'bg-white'} ring-1 ring-black ring-opacity-5`}>
+              <div className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 z-10 hidden group-hover:block ${
+                isDarkMode ? 'bg-gray-800' : 'bg-white'
+              } ring-1 ring-black ring-opacity-5`}>
                 {menuItems.slice(4).map((item) => (
-                  <a key={item} href="#" className={`block px-4 py-2 text-sm ${isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}>
+                  <a 
+                    key={item} 
+                    href="#" 
+                    className={`block px-4 py-2 text-sm transition-colors ${
+                      isDarkMode 
+                        ? 'text-gray-300 hover:bg-gray-700' 
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
                     {item}
                   </a>
                 ))}
               </div>
             </div>
             
-            {/* Dark Mode Toggle - Always visible */}
+            {/* Dark Mode Toggle - NOW PROPERLY VISIBLE */}
             <button
               onClick={handleDarkModeToggle}
-              className={`p-2 rounded-md transition-colors ${isDarkMode ? 'text-yellow-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              className={`p-2 rounded-md border-2 transition-all duration-200 ${
+                isDarkMode 
+                  ? 'text-yellow-400 border-yellow-400 hover:bg-yellow-400 hover:text-gray-800' 
+                  : 'text-gray-600 border-gray-300 hover:bg-gray-600 hover:text-white'
+              }`}
               title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label="Toggle dark mode"
             >
               {isDarkMode ? (
                 // Sun icon for light mode
@@ -117,14 +146,14 @@ const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
             {isLoggedIn ? (
               <button
                 onClick={handleLogout}
-                className={`px-3 py-2 rounded-md text-sm font-medium ${isDarkMode ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-red-500 hover:bg-red-600 text-white'}`}
+                className="px-3 py-2 rounded-md text-sm font-medium bg-red-500 hover:bg-red-600 text-white transition-colors"
               >
                 Logout
               </button>
             ) : (
               <button
                 onClick={handleLogin}
-                className={`px-3 py-2 rounded-md text-sm font-medium ${isDarkMode ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-green-500 hover:bg-green-600 text-white'}`}
+                className="px-3 py-2 rounded-md text-sm font-medium bg-green-500 hover:bg-green-600 text-white transition-colors"
               >
                 Login
               </button>
@@ -136,7 +165,13 @@ const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
             {/* Dark Mode Toggle - Mobile */}
             <button
               onClick={handleDarkModeToggle}
-              className={`p-2 rounded-md ${isDarkMode ? 'text-yellow-400 hover:bg-gray-700' : 'text-gray-600 hover:bg-gray-100'}`}
+              className={`p-2 rounded-md border-2 transition-all duration-200 ${
+                isDarkMode 
+                  ? 'text-yellow-400 border-yellow-400 hover:bg-yellow-400 hover:text-gray-800' 
+                  : 'text-gray-600 border-gray-300 hover:bg-gray-600 hover:text-white'
+              }`}
+              title={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label="Toggle dark mode"
             >
               {isDarkMode ? '☀️' : '🌙'}
             </button>
@@ -144,7 +179,11 @@ const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
             {/* Menu toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`p-2 rounded-md ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
+              className={`p-2 rounded-md transition-colors ${
+                isDarkMode 
+                  ? 'text-gray-300 hover:bg-gray-700 hover:text-white' 
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+              }`}
             >
               <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
@@ -157,7 +196,9 @@ const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="md:hidden">
-          <div className={`px-4 py-3 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <div className={`px-4 py-3 transition-colors ${
+            isDarkMode ? 'bg-gray-800' : 'bg-white'
+          } border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
             <form onSubmit={handleSearch}>
               <div className="relative">
                 <input
@@ -165,15 +206,29 @@ const Navbar = ({ isDarkMode = false, setIsDarkMode }: NavbarProps) => {
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`block w-full pl-3 pr-3 py-2 rounded-md ${isDarkMode ? 'bg-gray-700 text-white placeholder-gray-400' : 'bg-gray-100 text-gray-900 placeholder-gray-500'}`}
+                  className={`block w-full pl-3 pr-3 py-2 rounded-md transition-colors ${
+                    isDarkMode 
+                      ? 'bg-gray-700 text-white placeholder-gray-400' 
+                      : 'bg-gray-100 text-gray-900 placeholder-gray-500'
+                  }`}
                 />
               </div>
             </form>
           </div>
           
-          <div className={`px-2 pt-2 pb-3 space-y-1 ${isDarkMode ? 'bg-gray-800' : 'bg-white'} border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+          <div className={`px-2 pt-2 pb-3 space-y-1 transition-colors ${
+            isDarkMode ? 'bg-gray-800' : 'bg-white'
+          } border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
             {menuItems.map((item) => (
-              <a key={item} href="#" className={`block px-3 py-2 rounded-md text-base font-medium ${isDarkMode ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}>
+              <a 
+                key={item} 
+                href="#" 
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isDarkMode 
+                    ? 'text-gray-300 hover:bg-gray-700 hover:text-white' 
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                }`}
+              >
                 {item}
               </a>
             ))}
